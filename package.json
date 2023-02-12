@@ -3,7 +3,7 @@
     "@types/akamai-edgeworkers": "^1.1.5"
   },
   "name": "ew-2fa",
-  "version": "0.0.6",
+  "version": "0.0.12",
   "description": "for whatever reason can't use description",
   "main": "index.js",
   "config": {

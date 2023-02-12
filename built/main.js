@@ -49,7 +49,7 @@ export function onClientRequest(request) {
         looks like there is no true-client-ip in the header and ip info is not part of the request object
         Let's use PMUSER_CLIENT_REAL_IP in the deliver config and using the builtin.AK_CLIENT_REAL_IP value a
         We need to replace '.' with '-' as we can't use . in the EdgeKV key name.
-        There should always be a true client ip other wise lookup will fail.
+        There should always be a true client ip otherwise lookup will be an empty string, I guess ;-)
         */
         trueClientIp = request.getVariable("PMUSER_CLIENT_REAL_IP").replace(/\./g, "-");
         logger.log(trueClientIp);
@@ -69,13 +69,14 @@ export function onClientRequest(request) {
         if we have some results, overwrite the default value of 0.
         let also check if key exists just in case results are wrong.
         */
+        logger.log(JSON.stringify(clientInfo));
         if (clientInfo !== null && clientInfo.hasOwnProperty("failedAttempts")) {
             failedAttempts = clientInfo.failedAttempts;
         }
         logger.log("onClientRequest failed attempts: %d", failedAttempts);
         // return an error if we've hit/crossed the max number of attempts
         if (failedAttempts >= maxNumberOfAttempts) {
-            request.respondWith(403, {}, JSON.stringify(failedAttempts));
+            request.respondWith(403, { 'Content-Type': ['application/json;charset=utf-8'] }, '{"error": "too many failed 2FA codes"}');
         }
     });
 }
