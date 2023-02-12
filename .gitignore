@@ -1,0 +1,4 @@
+built/edgekv_tokens.js
+dist/
+*.log
+node_modules/
